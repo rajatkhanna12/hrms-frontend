@@ -1,4 +1,3 @@
-// src/slices/employeeSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface EmployeeState {

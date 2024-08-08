@@ -1,46 +1,59 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import signInImage from "../assets/images/signIn.avif";
-import TextInput from "../components/TextInput";
-import Button from "../components/Button";
-import { loginUser } from "../utils/axiosInstance";
-import { loginSuccess, loginFailure } from "../features/login/authSlice";
+import { loginUser } from "../service/axiosInstance";
 import { RootState } from "../store/store";
+import Button from "../components/Button";
+import TextInput from "../components/TextInput";
+import { useTypedSelector } from "../hooks/useTypedSelector";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const error = useSelector((state: RootState) => state.auth.error);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  // const loading = useSelector((state: RootState) => state.auth.loading);
+  const authState = useTypedSelector((state: RootState) => state.auth);
+  const { loading, error, token, username, userRole } = authState;
+  const initialValues = {
+    username: "",
+    password: "",
+  };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    try {
-      const response = await loginUser(username, password);
-      const {
-        token,
-        data: { userRole },
-      } = response;
+  const validationSchema = Yup.object({
+    username: Yup.string().required("Username is required"),
+    password: Yup.string().required("Password is required"),
+  });
+
+  const handleSubmit = async (values: typeof initialValues) => {
+    const response = await loginUser(values.username, values.password);
+    if (response.message === "Login successful") {
+      toast("Login successful!", {
+        position: "top-right",
+        autoClose: 5000,
+        transition: Bounce,
+      });
       localStorage.setItem(
         "userInfo",
-        JSON.stringify({ token: response?.data?.token, username })
-      );
-      console.log(token, "userInfo", response?.data?.token);
-      dispatch(loginSuccess({ token, username, userRole }));
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Login failed:", error);
-      dispatch(
-        loginFailure("Login failed. Please check your username and password.")
-      );
+        JSON.stringify({
+          token: response?.data?.token,
+          username: values.username,
+        })
+      );      navigate("/dashboard");
+    } else {
+      toast(response?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        transition: Bounce,
+      });
     }
   };
 
   return (
     <div className="flex min-h-screen">
+      <ToastContainer />
       <div className="relative w-1/2 bg-gradient-to-r from-blue-500 to-purple-700 overflow-hidden">
         <motion.div
           className="absolute inset-0 bg-cover bg-center"
@@ -51,37 +64,58 @@ const Login: React.FC = () => {
         />
       </div>
 
-      <div className="w-1/2 flex items-center justify-center bg-white text-gray-900">
+      <div className="w-1/2 flex items-center justify-center bg-custom-blue text-gray-900">
         <div className="max-w-md w-full p-8 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 rounded-lg shadow-lg">
-          <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+          <h2 className="text-3xl font-bold mb-6 text-center text-gray-600">
             Log In
           </h2>
-          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <TextInput
-                label="Username"
-                value={username}
-                type="text"
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                placeholder="Enter username"
-                inputStyle="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div className="mb-6">
-              <TextInput
-                label="Password"
-                value={password}
-                type="password"
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                inputStyle="p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter password"
-              />
-            </div>
-            <Button type="submit" label="Sign In" />
-          </form>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({
+              isSubmitting,
+              values,
+              handleChange,
+              handleBlur,
+              errors,
+              touched,
+            }) => (
+              <Form>
+                <TextInput
+                  label="Username"
+                  name="username"
+                  value={values.username}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter username"
+                  error={
+                    touched.username && errors.username ? errors.username : ""
+                  }
+                  className="mb-4"
+                />
+                <TextInput
+                  label="Password"
+                  name="password"
+                  type="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter password"
+                  error={
+                    touched.password && errors.password ? errors.password : ""
+                  }
+                  className="mb-6"
+                />
+                <Button
+                  type="submit"
+                  label={loading ? "Signing In..." : "Sign In"}
+                  disabled={loading || isSubmitting}
+                />
+              </Form>
+            )}
+          </Formik>
         </div>
       </div>
     </div>
