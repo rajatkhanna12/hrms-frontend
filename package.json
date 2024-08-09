@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://rajatkhanna12.github.io/hrms-frontend",
+
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
