@@ -3,7 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://rajatkhanna12.github.io/hrms-frontend",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -13,6 +12,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
+    "@rollup/rollup-darwin-arm64": "^4.20.0",
     "axios": "^1.7.3",
     "clsx": "^2.1.1",
     "formik": "^2.4.6",
