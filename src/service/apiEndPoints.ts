@@ -4,8 +4,8 @@ const apiUri = {
     auth:{
         login:'/Login'
     },
-    dashboard:{
-        
+    employee:{
+       addEmployee: "/SaveUser"
     }
 }
 export { apiUri, baseURL };

@@ -1,22 +1,21 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import {toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import signInImage from "../assets/images/signIn.avif";
-import { loginUser } from "../service/axiosInstance";
-import { RootState } from "../store/store";
-import Button from "../components/Button";
-import TextInput from "../components/TextInput";
-import { useTypedSelector } from "../hooks/useTypedSelector";
+import signInImage from "../../assets/images/signIn.avif";
+import { useNavigate } from "react-router-dom";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
+import { useApiActions } from "../../hooks/useActions";
+import TextInput from "../../components/TextInput";
+import Button from "../../components/Button";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  // const loading = useSelector((state: RootState) => state.auth.loading);
-  const authState = useTypedSelector((state: RootState) => state.auth);
-  const { loading, error, token, username, userRole } = authState;
+  const { login } = useApiActions(); 
+  const {loading} = useTypedSelector((state) => state.auth);
+
   const initialValues = {
     username: "",
     password: "",
@@ -27,27 +26,22 @@ const Login: React.FC = () => {
     password: Yup.string().required("Password is required"),
   });
 
-  const handleSubmit = async (values: typeof initialValues) => {
-    const response = await loginUser(values.username, values.password);
-    if (response.message === "Login successful") {
-      toast("Login successful!", {
-        position: "top-right",
-        autoClose: 5000,
-        transition: Bounce,
-      });
-      localStorage.setItem(
-        "userInfo",
-        JSON.stringify({
-          token: response?.data?.token,
-          username: values.username,
-        })
-      );      navigate("/dashboard");
-    } else {
-      toast(response?.message, {
-        position: "top-right",
-        autoClose: 5000,
-        transition: Bounce,
-      });
+  const handleSubmit = async (values: { username: string; password: string }) => {
+    try {
+      const resultAction = await login(values);
+      //@ts-ignore
+      if (!resultAction.payload.isError) {
+        toast.success("Login successful!");
+        navigate("/dashboard");
+      } else {
+        if (resultAction.payload) {
+          toast.error(`Login failed: ${resultAction.payload?.message}`);
+        } else {
+          toast.error("Login failed: Unknown error");
+        }
+      }
+    } catch (error) {
+      toast.error(`An unexpected error occurred`);
     }
   };
 
@@ -111,7 +105,7 @@ const Login: React.FC = () => {
                 <Button
                   type="submit"
                   label={loading ? "Signing In..." : "Sign In"}
-                  disabled={loading || isSubmitting}
+                  // disabled={loading || isSubmitting}
                 />
               </Form>
             )}

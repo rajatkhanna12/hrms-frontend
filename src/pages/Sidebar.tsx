@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import AddEmployeeIcon from "../assets/icon/AddEmployeeIcon";
 import ReportEmployeeIcon from "../assets/icon/ReportEmployeeIcon";
@@ -6,26 +6,30 @@ import ProfileIcon from "../assets/icon/ProfileIcon";
 import LogoutIcon from "../assets/icon/LogoutIcon";
 import AttendanceIcon from "../assets/icon/AttendanceIcon";
 import WorkDiaryIcon from "../assets/icon/WorkDiaryIcon";
+import { useNavigate } from "react-router-dom";
+import { useApiActions } from "../hooks/useActions";
+import { useTypedSelector } from "../hooks/useTypedSelector";
 
-const options = [
-  { id: 1, label: "Add Employee", icon: <AddEmployeeIcon />, onClick: "add" },
-  {
-    id: 2,
-    label: "Report Employee",
-    icon: <ReportEmployeeIcon />,
-    onClick: "report",
-  },
-  {
-    id: 3,
-    label: "Attendance",
-    icon: <AttendanceIcon />,
-    onClick: "attendance",
-  },
-  { id: 4, label: "Work Diary", icon: <WorkDiaryIcon />, onClick: "workDiary" },
-  { id: 5, label: "Profile", icon: <ProfileIcon />, onClick: "profile" },
-  { id: 6, label: "Logout", icon: <LogoutIcon />, onClick: "/" },
-];
+interface UserRoleProps  {
+  roleName:string;
+  id:number;
+}
 
+const getOptions = (userRole: UserRoleProps) => {
+  const baseOptions = [
+    { id: 1, label: "Add Employee", icon: <AddEmployeeIcon />, onClick: "add" },
+    { id: 2, label: "Report Employee", icon: <ReportEmployeeIcon />, onClick: "report" },
+    { id: 3, label: "Attendance", icon: <AttendanceIcon />, onClick: "attendance" },
+    { id: 4, label: "Work Diary", icon: <WorkDiaryIcon />, onClick: "workDiary" },
+    { id: 6, label: "Logout", icon: <LogoutIcon />, onClick: "/" }
+  ];
+
+  if (userRole.roleName !== "Administrator") {
+    baseOptions.push({ id: 5, label: "Profile", icon: <ProfileIcon />, onClick: "profile" });
+  }
+
+  return baseOptions;
+};
 interface SidebarProps {
   activeSection: "add" | "report" | "attendance" | "profile" | "workDiary";
   onSectionChange: (
@@ -37,6 +41,15 @@ const Sidebar: React.FC<SidebarProps> = ({
   activeSection,
   onSectionChange,
 }) => {
+  const navigate = useNavigate();
+  const { logout } = useApiActions(); 
+  const {userRole} = useTypedSelector((state) => state.auth);
+
+  useEffect(()=>{
+    // alert(JSON.stringify(store.getState().auth))
+  },[])
+  const options = getOptions(userRole);
+
   return (
     <div className="w-64 h-screen bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4 shadow-lg">
       <div className="flex items-center mb-8">
@@ -83,7 +96,10 @@ const Sidebar: React.FC<SidebarProps> = ({
               </button>
             ) : (
               <Link
-                to={option.onClick}
+              onClick={()=>{
+                  logout()
+                  navigate('/login')
+              }}
                 className="flex items-center w-full text-left px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-200"
               >
                 {option.icon}

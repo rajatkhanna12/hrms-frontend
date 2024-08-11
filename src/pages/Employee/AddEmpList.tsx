@@ -1,6 +1,5 @@
-// EmployeeList.tsx
 import React, { useEffect, useState } from "react";
-import { getUsers } from "../../service/axiosInstance";
+// import { getUsers } from "../../service/axiosInstance";
 
 const EmployeeList: React.FC = () => {
   const [employees, setEmployees] = useState<any[]>([]);
@@ -10,9 +9,9 @@ const EmployeeList: React.FC = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const data = await getUsers();
-        console.log(data,"<========")
-        setEmployees(data);
+        // const data = await getUsers();
+        // console.log(data,"<========")
+        // setEmployees(data);
       } catch (err) {
         setError("Failed to fetch employees");
       } finally {

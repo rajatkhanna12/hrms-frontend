@@ -1,4 +1,3 @@
-// src/features/attendance/attendanceSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AttendanceEntry {

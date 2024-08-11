@@ -4,7 +4,7 @@ import { cn } from "../utils";
 interface TextInputProps {
   label?: string;
   id?: string;
-  value?: string;
+  value?: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   required?: boolean;

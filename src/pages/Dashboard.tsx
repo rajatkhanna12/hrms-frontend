@@ -40,13 +40,13 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Sidebar from './Sidebar';
-import AddEmployee from './admin/AddEmployee';
-import ReportEmployee from './admin/ReportEmployee';
+import AddEmployee from './addEmployee';
+import ReportEmployee from './ReportEmployee';
 import EmployeeAttendance from './Employee/EmployeeAttendance';
 import WorkDiaryPage from './Employee/WorkDiaryPage';
 
 import { RootState } from '../store/store'; 
-import { setActiveSection } from '../features/dashboard/sidebarSlice';
+import { setActiveSection } from '../store/dashboard/sidebarSlice';
 import EmployeeList from './Employee/AddEmpList';
 
 const Dashboard: React.FC = () => {

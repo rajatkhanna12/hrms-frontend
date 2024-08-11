@@ -1,17 +1,25 @@
-import { useDispatch } from "react-redux";
-import { bindActionCreators } from "redux";
-import authSlice from "../store/login/authSlice";
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../store/store';
+import { login, logout } from '../store/login/authSlice';
+import { addEmployee } from '../store/addEmployee/addEmployeeSlice';
 
+export const useApiActions = () => {
+  const dispatch: AppDispatch = useDispatch();
 
-export const useActions = () => {
-    const dispatch = useDispatch();
-    return bindActionCreators(
-        Object.assign(
-            {
-                authSlice
-            },
-           
-        ),
-        dispatch,
-    );
+  return {
+    //@ts-ignore
+    login: (credentials: {username: string, password: string}) => dispatch(login(credentials)),
+    logout: ()=>dispatch(logout()),
+    addEmployee: (params:{
+      userName: string;
+      password: string;
+      userCode: string;
+      departmentId: number;
+      name: string;
+      phoneNumber: string;
+      email: string;
+      roleId:number;
+      //@ts-ignore
+    }) => dispatch(addEmployee(params))
+  };
 };
