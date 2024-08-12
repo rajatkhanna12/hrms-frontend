@@ -19,7 +19,7 @@ export const createTask = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await apiInstance.post(apiUri.createTask, params);
+      const response = await apiInstance.post(apiUri.createTask.createTask, params);
       return response.data;
     } catch (error) {
       if (error instanceof Error) {

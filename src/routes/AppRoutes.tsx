@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import LandingPage from "../pages/LandingPage";
-import Dashboard from "../pages/Dashboard";
 import Layout from "../layouts/MainLayout";
 import { useTypedSelector } from "../hooks/useTypedSelector";
 import Login from "../pages/login";
+import LandingPage from "../pages/landingPage";
+import Dashboard from "../pages/dashboard";
 
 const AppRoutes: React.FC = () => {
   const {token} = useTypedSelector((state) => state.auth); // Get the loading state from the store

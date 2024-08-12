@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import AddEmployeeIcon from "../assets/icon/AddEmployeeIcon";
-import ReportEmployeeIcon from "../assets/icon/ReportEmployeeIcon";
-import ProfileIcon from "../assets/icon/ProfileIcon";
-import LogoutIcon from "../assets/icon/LogoutIcon";
-import AttendanceIcon from "../assets/icon/AttendanceIcon";
-import WorkDiaryIcon from "../assets/icon/WorkDiaryIcon";
+import AddEmployeeIcon from "../../assets/icon/AddEmployeeIcon";
+import ReportEmployeeIcon from "../../assets/icon/ReportEmployeeIcon";
+import ProfileIcon from "../../assets/icon/ProfileIcon";
+import LogoutIcon from "../../assets/icon/LogoutIcon";
+import AttendanceIcon from "../../assets/icon/AttendanceIcon";
+import WorkDiaryIcon from "../../assets/icon/WorkDiaryIcon";
 import { useNavigate } from "react-router-dom";
-import { useApiActions } from "../hooks/useActions";
-import { useTypedSelector } from "../hooks/useTypedSelector";
+import { useApiActions } from "../../hooks/useActions";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
 
 interface UserRoleProps  {
   roleName:string;

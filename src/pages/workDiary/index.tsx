@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import EditIcon from "../../assets/icon/EditIcon";
-import TrashIcon from "../../assets/icon/TrashIcon";
 import Button from "../../components/Button";
 import * as Yup from "yup";
 import { Form, Formik } from "formik";
@@ -9,22 +7,17 @@ import { useApiActions } from "../../hooks/useActions";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 
 const initialSchema = {
-  userId: "",
+  userId: null,
   taskTitle: "",
   taskDescription: "",
-  updateDateTime: "",
-  status: "",
   createdDate: "",
-  estimatedHours: "",
-  id: "",
+  estimatedHours: null,
 };
 
 const validationSchema = Yup.object({
-  userId: Yup.string().required("userId is required"),
+  userId: Yup.number().required("userId is required"),
   taskTitle: Yup.string().required("taskTitle is required"),
   taskDescription: Yup.string().required("taskDescription is required"),
-  updateDateTime: Yup.number().required("updateDateTime is required"),
-  status: Yup.string().required("status is required"),
   createdDate: Yup.string().required("createdDate is required"),
   estimatedHours: Yup.number().required("estimatedHours is required"),
 });
@@ -35,16 +28,18 @@ const WorkDiaryPage: React.FC = () => {
   );
 
   const handleSubmit = async (values: {
-    userId: string;
+    userId: number;
     taskTitle: string;
     taskDescription: string;
     updateDateTime: string;
-    status: string;
+    status: number;
     createdDate: string;
     estimatedHours: number;
-    id: string;
+    id: number;
   }) => {
-    await createTask(values);
+   const resp = await createTask(values);
+   console.log(resp,'Response')
+
   };
 
   // const handleDelete = (index: number) => {
@@ -78,7 +73,7 @@ const WorkDiaryPage: React.FC = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   placeholder="Task Title"
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  isBorder
                   error={
                     touched.taskTitle && errors.taskTitle
                       ? errors.taskTitle
@@ -91,9 +86,9 @@ const WorkDiaryPage: React.FC = () => {
                   label="User ID"
                   value={values.userId}
                   onChange={handleChange}
+                  isBorder
                   onBlur={handleBlur}
                   placeholder="User ID"
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   error={touched.userId && errors.userId ? errors.userId : ""}
                 />
                 <TextInput
@@ -101,9 +96,9 @@ const WorkDiaryPage: React.FC = () => {
                   type="time"
                   label="createdDate"
                   value={values.createdDate}
+                  isBorder
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   error={
                     touched.createdDate && errors.createdDate
                       ? errors.createdDate
@@ -116,8 +111,8 @@ const WorkDiaryPage: React.FC = () => {
                   label="Estimated Hours"
                   value={values.estimatedHours}
                   onChange={handleChange}
+                  isBorder
                   onBlur={handleBlur}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   error={
                     touched.estimatedHours && errors.estimatedHours
                       ? errors.estimatedHours
@@ -149,7 +144,7 @@ const WorkDiaryPage: React.FC = () => {
                 type="submit"
                 label="Add Task"
                 className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                disabled={isSubmitting || loading}
+                // disabled={isSubmitting || loading}
               />
             </Form>
           )}

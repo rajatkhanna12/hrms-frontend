@@ -29,6 +29,7 @@ const authSlice = createSlice({
       userRole: null as string | null,
       loading: false,
       error: null as string | null,
+      userId:null as number | null
     },
     reducers: {
       logout: (state) => {
@@ -49,10 +50,12 @@ const authSlice = createSlice({
           state.token = action.payload.data.token;
           state.userName = action.payload.data.userName;
           state.userRole = action.payload.data.userRole;
+          state.userId = action.payload.data.userId;
           localStorage.setItem('userInfo', JSON.stringify({
             token: action.payload.data.token,
             userName: action.payload.data.userName,
             userRole: action.payload.data.userRole,
+            userId:action.payload.data.userId
           }));
         })
         .addCase(login.rejected, (state, action) => {

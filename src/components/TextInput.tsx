@@ -12,6 +12,7 @@ interface TextInputProps {
   labelStyle?: string;
   inputStyle?: string;
   placeholder?: string;
+  isBorder?: boolean;
   name?: string;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   error?: string; // Error message as a string
@@ -23,6 +24,7 @@ const TextInput: React.FC<TextInputProps> = ({
   id = "",
   value = "",
   onChange,
+  isBorder=false,
   type = "text",  // Set default type to "text"
   required = false,
   inputStyle = "",
@@ -33,7 +35,7 @@ const TextInput: React.FC<TextInputProps> = ({
   error = "", // Receive the error message as a prop
 }) => {
   return (
-    <div className={cn("flex flex-col", className)}>
+    <div className={cn(`flex flex-col ${isBorder && "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"}`, className)}>
       {label && (
         <label
           htmlFor={id}
