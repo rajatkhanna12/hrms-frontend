@@ -2,117 +2,158 @@ import React, { useState } from "react";
 import EditIcon from "../../assets/icon/EditIcon";
 import TrashIcon from "../../assets/icon/TrashIcon";
 import Button from "../../components/Button";
-import { createTask } from "../../service/axiosInstance";
+import * as Yup from "yup";
+import { Form, Formik } from "formik";
+import TextInput from "../../components/TextInput";
+import { useApiActions } from "../../hooks/useActions";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
 
-interface Task {
-  userId: string;
-  title: string;
-  description: string;
-  startTime: string;
-  status: string;
-}
+const initialSchema = {
+  userId: "",
+  taskTitle: "",
+  taskDescription: "",
+  updateDateTime: "",
+  status: "",
+  createdDate: "",
+  estimatedHours: "",
+  id: "",
+};
 
+const validationSchema = Yup.object({
+  userId: Yup.string().required("userId is required"),
+  taskTitle: Yup.string().required("taskTitle is required"),
+  taskDescription: Yup.string().required("taskDescription is required"),
+  updateDateTime: Yup.number().required("updateDateTime is required"),
+  status: Yup.string().required("status is required"),
+  createdDate: Yup.string().required("createdDate is required"),
+  estimatedHours: Yup.number().required("estimatedHours is required"),
+});
 const WorkDiaryPage: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const { createTask } = useApiActions();
+  const { isError, error, loading, message } = useTypedSelector(
+    (state) => state.createTask
+  );
 
-  const [newTask, setNewTask] = useState<Task>({
-    userId: "",
-    title: "",
-    description: "",
-    startTime: "",
-    status: "",
-  });
-
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    setNewTask({
-      ...newTask,
-      [e.target.name]: e.target.value,
-    });
+  const handleSubmit = async (values: {
+    userId: string;
+    taskTitle: string;
+    taskDescription: string;
+    updateDateTime: string;
+    status: string;
+    createdDate: string;
+    estimatedHours: number;
+    id: string;
+  }) => {
+    await createTask(values);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const createdTask = await createTask(newTask);
-      console.log(createdTask, "createdTaskcreatedTask");
-      setTasks([...tasks, createdTask]);
-      setNewTask({
-        userId: "",
-        title: "",
-        description: "",
-        startTime: "",
-        status: "",
-      });
-    } catch (error) {
-      console.error("Error creating task:", error);
-    }
-  };
-
-  const handleDelete = (index: number) => {
-    setTasks(tasks.filter((_, i) => i !== index));
-  };
+  // const handleDelete = (index: number) => {
+  //   setTasks(tasks.filter((_, i) => i !== index));
+  // };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-gray-500">Work Diary</h1>
       <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
-        <form onSubmit={handleSubmit} className="mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-            <input
-              type="text"
-              name="title"
-              value={newTask.title}
-              onChange={handleInputChange}
-              placeholder="Task Title"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-            <input
-              type="text"
-              name="userId"
-              value={newTask.userId}
-              onChange={handleInputChange}
-              placeholder="User ID"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-            <input
-              type="time"
-              name="startTime"
-              value={newTask.startTime}
-              onChange={handleInputChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-            <select
-              name="status"
-              value={newTask.status}
-              onChange={handleInputChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="In Progress">In Progress</option>
-              <option value="Completed">Completed</option>
-            </select>
-            <textarea
-              name="description"
-              value={newTask.description}
-              onChange={handleInputChange}
-              placeholder="Task Description"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+        <Formik
+          initialValues={initialSchema}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({
+            isSubmitting,
+            values,
+            handleChange,
+            handleBlur,
+            errors,
+            touched,
+          }) => (
+            <Form className="mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <TextInput
+                  name="taskTitle"
+                  type="text"
+                  label="Task Title"
+                  value={values.taskTitle}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Task Title"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  error={
+                    touched.taskTitle && errors.taskTitle
+                      ? errors.taskTitle
+                      : ""
+                  }
+                />
+                <TextInput
+                  name="userId"
+                  type="text"
+                  label="User ID"
+                  value={values.userId}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="User ID"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  error={touched.userId && errors.userId ? errors.userId : ""}
+                />
+                <TextInput
+                  name="createdDate"
+                  type="time"
+                  label="createdDate"
+                  value={values.createdDate}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  error={
+                    touched.createdDate && errors.createdDate
+                      ? errors.createdDate
+                      : ""
+                  }
+                />
+                <TextInput
+                  name="estimatedHours"
+                  type="number"
+                  label="Estimated Hours"
+                  value={values.estimatedHours}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  error={
+                    touched.estimatedHours && errors.estimatedHours
+                      ? errors.estimatedHours
+                      : ""
+                  }
+                />
 
-          <Button
-            type="submit"
-            label="Add Task"
-            className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-          />
-        </form>
+                <select
+                  name="status"
+                  value={values.status}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="" label="Select status" />
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                </select>
+                <textarea
+                  name="taskDescription"
+                  value={values.taskDescription}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Task Description"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <Button
+                type="submit"
+                label="Add Task"
+                className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                disabled={isSubmitting || loading}
+              />
+            </Form>
+          )}
+        </Formik>
         <table className="w-full border-collapse bg-white rounded-lg shadow-md">
           <thead>
             <tr className="bg-blue-100 border-b">
@@ -124,7 +165,7 @@ const WorkDiaryPage: React.FC = () => {
               <th className="py-3 px-4 text-center text-blue-800">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          {/* <tbody>
             {tasks.length > 0 ? (
               tasks.map((task, index) => (
                 <tr
@@ -162,7 +203,7 @@ const WorkDiaryPage: React.FC = () => {
                 </td>
               </tr>
             )}
-          </tbody>
+          </tbody> */}
         </table>
       </div>
     </div>

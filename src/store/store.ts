@@ -5,12 +5,16 @@ import authReducer from './login/authSlice';
 import employeeReducer from './addEmployee/addEmployeeSlice';
 import attendanceReducer from '../features/attendance/attendanceSlice';
 import sidebarReducer from './dashboard/sidebarSlice';
+import employeeListSliceReducer from './empList/employeeListSlice';
+import  createTaskSliceReducer  from './createTask/createtaskSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
   addEmployee: employeeReducer,
   attendance: attendanceReducer,
   sidebar: sidebarReducer,
+employeeList : employeeListSliceReducer,
+createTask : createTaskSliceReducer ,
 });
 
 const persistConfig = {

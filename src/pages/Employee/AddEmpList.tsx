@@ -1,26 +1,17 @@
 import React, { useEffect, useState } from "react";
-// import { getUsers } from "../../service/axiosInstance";
+import { useApiActions } from "../../hooks/useActions";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
 
 const EmployeeList: React.FC = () => {
-  const [employees, setEmployees] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { employeeList } = useApiActions();
+  const { data, error, loading } = useTypedSelector((state) => state.employeeList);
+
 
   useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        // const data = await getUsers();
-        // console.log(data,"<========")
-        // setEmployees(data);
-      } catch (err) {
-        setError("Failed to fetch employees");
-      } finally {
-        setLoading(false);
-      }
-    };
+    const data = employeeList();
+  }, []);  
 
-    fetchEmployees();
-  }, []);
+
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -53,7 +44,7 @@ const EmployeeList: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {employees.map((employee) => (
+            {data.map((employee:any) => (
               <tr key={employee.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   {employee?.name}
