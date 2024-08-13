@@ -1,13 +1,9 @@
 import axios from "axios";
-import { apiUri, baseURL } from "./apiEndPoints";
-import { useDispatch } from "react-redux";
-import { useApiActions } from "../hooks/useActions";
-import { useNavigate } from "react-router-dom";
+import { baseURL } from "./apiEndPoints";
 
 export const apiInstance = axios.create({
   baseURL: baseURL,
 });
-
 
 const getToken = () => {
   const userInfo = localStorage.getItem("userInfo");
@@ -36,9 +32,8 @@ apiInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-   
     // error.message === "Request failed with status code 401" && logout()
-      // navigate('/login')
+    // navigate('/login')
     return Promise.reject(error);
   }
 );

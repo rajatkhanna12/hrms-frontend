@@ -4,6 +4,8 @@ import { login, logout } from '../store/login/authSlice';
 import { addEmployee } from '../store/addEmployee/addEmployeeSlice';
 import { employeeList } from '../store/empList/employeeListSlice';
 import { createTask } from '../store/createTask/createtaskSlice';
+import { getTask } from '../store/getTask/getTaskSlice';
+import { updateTask } from '../store/updateTask/updateTaskSlice';
 
 export const useApiActions = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -25,6 +27,7 @@ export const useApiActions = () => {
     }) => dispatch(addEmployee(params)),
     //@ts-ignore
     employeeList: () => dispatch(employeeList()),
+    getTask: () => dispatch(getTask()),
     createTask: (params: {
       userId: number;
         taskTitle: string;
@@ -35,7 +38,10 @@ export const useApiActions = () => {
         estimatedHours : number ;
         id : number;
     }) => dispatch(createTask(params)),
-    
-    getTask: () => dispatch(getTask()),
+    updateTask : ( params: {
+      taskId: number;
+      status: number;
+    })=> dispatch(updateTask(params))
+ 
   };
 };

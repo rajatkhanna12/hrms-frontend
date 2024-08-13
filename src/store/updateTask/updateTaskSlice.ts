@@ -3,23 +3,20 @@ import { apiInstance } from "../../service/axiosInstance";
 import axios from "axios";
 import { apiUri } from "../../service/apiEndPoints";
 
-export const createTask = createAsyncThunk(
-  "createTask",
+export const updateTask = createAsyncThunk(
+  "updateTask",
   async (
     params: {
-        userId: number;
-        taskTitle: string;
-        taskDescription: string;
-        updateDateTime: string;
-        status: number;
-        createdDate : string;
-        estimatedHours : number ;
-        id : number;
+      taskId: number;
+      status: number;
     },
     { rejectWithValue }
   ) => {
     try {
-      const response = await apiInstance.post(apiUri.createTask.createTask, params);
+      const response = await apiInstance.post(
+        apiUri.updateTask.updateTask,
+        params
+      );
       return response.data;
     } catch (error) {
       if (error instanceof Error) {
@@ -33,39 +30,32 @@ export const createTask = createAsyncThunk(
   }
 );
 
-const createTaskSlice = createSlice({
-  name: "createTask",
+const updateTaskSlice = createSlice({
+  name: "updateTask",
   initialState: {
     isError: false,
     loading: false,
     error: null as string | null,
-    message:null as string | null,
-    id : null as number | null,
-    status : null as number | null
+    message: null as string | null,
   },
-  reducers: {
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(createTask.pending, (state) => {
+      .addCase(updateTask.pending, (state) => {
         state.loading = true;
         state.error = null;
         state.isError = false;
-        state.id = null;
-        state.status = null
       })
-      .addCase(createTask.fulfilled, (state, action) => {
+      .addCase(updateTask.fulfilled, (state, action) => {
         state.loading = false;
         state.isError = action.payload.data.isError;
         state.message = action.payload.data.message;
-        state.id = action.payload.data.id;
-        state.status = action.payload.data.status;
       })
-      .addCase(createTask.rejected, (state, action) => {
+      .addCase(updateTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
   },
 });
 
-export default createTaskSlice.reducer;
+export default updateTaskSlice.reducer;

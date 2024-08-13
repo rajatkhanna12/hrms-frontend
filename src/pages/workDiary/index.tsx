@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import * as Yup from "yup";
 import { Form, Formik } from "formik";
 import TextInput from "../../components/TextInput";
 import { useApiActions } from "../../hooks/useActions";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
+import EditIcon from "../../assets/icon/EditIcon";
+import TrashIcon from "../../assets/icon/TrashIcon";
 
 const initialSchema = {
   userId: null,
@@ -15,35 +17,32 @@ const initialSchema = {
 };
 
 const validationSchema = Yup.object({
-  userId: Yup.number().required("userId is required"),
   taskTitle: Yup.string().required("taskTitle is required"),
   taskDescription: Yup.string().required("taskDescription is required"),
-  createdDate: Yup.string().required("createdDate is required"),
   estimatedHours: Yup.number().required("estimatedHours is required"),
 });
 const WorkDiaryPage: React.FC = () => {
-  const { createTask } = useApiActions();
-  const { isError, error, loading, message } = useTypedSelector(
-    (state) => state.createTask
-  );
-
+  const { createTask, getTask } = useApiActions();
+  const { userId } = useTypedSelector((state) => state.auth);
+  const { data } = useTypedSelector((state) => state.getTask);
+  useEffect(() => {
+  const data =  getTask();
+  }, []);
   const handleSubmit = async (values: {
-    userId: number;
     taskTitle: string;
     taskDescription: string;
     updateDateTime: string;
-    status: number;
-    createdDate: string;
     estimatedHours: number;
     id: number;
   }) => {
-    const resp = await createTask(values);
+    const resp = await createTask({
+      ...values,
+      userId,
+      createdDate: new Date(),
+      status: 1,
+    });
     console.log(resp, "Response");
   };
-
-  // const handleDelete = (index: number) => {
-  //   setTasks(tasks.filter((_, i) => i !== index));
-  // };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -79,31 +78,6 @@ const WorkDiaryPage: React.FC = () => {
                       : ""
                   }
                 />
-                {/* <TextInput
-                  name="userId"
-                  type="text"
-                  label="User ID"
-                  value={values.userId}
-                  onChange={handleChange}
-                  isBorder
-                  onBlur={handleBlur}
-                  placeholder="User ID"
-                  error={touched.userId && errors.userId ? errors.userId : ""}
-                /> */}
-                {/* <TextInput
-                  name="createdDate"
-                  type="time"
-                  label="createdDate"
-                  value={values.createdDate}
-                  isBorder
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={
-                    touched.createdDate && errors.createdDate
-                      ? errors.createdDate
-                      : ""
-                  }
-                /> */}
                 <TextInput
                   name="estimatedHours"
                   type="number"
@@ -159,15 +133,15 @@ const WorkDiaryPage: React.FC = () => {
               <th className="py-3 px-4 text-center text-blue-800">Actions</th>
             </tr>
           </thead>
-          {/* <tbody>
-            {tasks.length > 0 ? (
-              tasks.map((task, index) => (
+          <tbody>
+            {data.length > 0 ? (
+              data.map((task, index) => (
                 <tr
                   key={index}
                   className="border-b hover:bg-gray-100 transition duration-300"
                 >
                   <td className="py-3 px-4 text-gray-700">{task.userId}</td>
-                  <td className="py-3 px-4 text-gray-700">{task.title}</td>
+                  <td className="py-3 px-4 text-gray-700">{task.taskTitle}</td>
                   <td className="py-3 px-4 text-gray-700">
                     {task.description}
                   </td>
@@ -197,7 +171,7 @@ const WorkDiaryPage: React.FC = () => {
                 </td>
               </tr>
             )}
-          </tbody> */}
+          </tbody>
         </table>
       </div>
     </div>

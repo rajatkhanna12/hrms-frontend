@@ -11,7 +11,8 @@ import attendanceReducer from "../features/attendance/attendanceSlice";
 import sidebarReducer from "./dashboard/sidebarSlice";
 import employeeListSliceReducer from "./empList/employeeListSlice";
 import createTaskSliceReducer from "./createTask/createtaskSlice";
-// import getTaskSliceReducer from "./getTask/getTaskSlice";
+import getTaskReducer from "./getTask/getTaskSlice";
+import  updateTaskReducer  from "./updateTask/updateTaskSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   sidebar: sidebarReducer,
   employeeList: employeeListSliceReducer,
   createTask: createTaskSliceReducer,
-  // getTask: getTaskSliceReducer,
+  getTask: getTaskReducer,
+  updateTask : updateTaskReducer
 });
 
 const persistConfig = {
