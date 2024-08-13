@@ -42,23 +42,3 @@ apiInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-
-// export const createTask = async (taskData: {
-//   userId: string;
-//   title: string;
-//   description: string;
-//   startTime: string;
-//   status: string;
-// }) => {
-//   try {
-//     const response = await apiInstance.post("/api/Task/CreateTask", taskData);
-//     return response.data;
-//   } catch (error: any) {
-//     console.error(
-//       "Error creating task:",
-//       error.response ? error.response.data : error.message
-//     );
-//     throw error;
-//   }
-// };

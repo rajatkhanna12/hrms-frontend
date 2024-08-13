@@ -37,9 +37,8 @@ const WorkDiaryPage: React.FC = () => {
     estimatedHours: number;
     id: number;
   }) => {
-   const resp = await createTask(values);
-   console.log(resp,'Response')
-
+    const resp = await createTask(values);
+    console.log(resp, "Response");
   };
 
   // const handleDelete = (index: number) => {
@@ -80,7 +79,7 @@ const WorkDiaryPage: React.FC = () => {
                       : ""
                   }
                 />
-                <TextInput
+                {/* <TextInput
                   name="userId"
                   type="text"
                   label="User ID"
@@ -90,8 +89,8 @@ const WorkDiaryPage: React.FC = () => {
                   onBlur={handleBlur}
                   placeholder="User ID"
                   error={touched.userId && errors.userId ? errors.userId : ""}
-                />
-                <TextInput
+                /> */}
+                {/* <TextInput
                   name="createdDate"
                   type="time"
                   label="createdDate"
@@ -104,7 +103,7 @@ const WorkDiaryPage: React.FC = () => {
                       ? errors.createdDate
                       : ""
                   }
-                />
+                /> */}
                 <TextInput
                   name="estimatedHours"
                   type="number"

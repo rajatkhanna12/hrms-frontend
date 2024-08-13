@@ -12,6 +12,9 @@ const apiUri = {
     },
     createTask:{
         createTask : "/api/Task/CreateTask"
-    }
+    },
+    // getTask : {
+    //     getTask : "/api/Task/GetTasks"
+    // }
 }
 export { apiUri, baseURL };

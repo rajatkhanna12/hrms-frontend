@@ -34,6 +34,8 @@ export const useApiActions = () => {
         createdDate : string;
         estimatedHours : number ;
         id : number;
-    }) => dispatch(createTask(params))
+    }) => dispatch(createTask(params)),
+    
+    getTask: () => dispatch(getTask()),
   };
 };
