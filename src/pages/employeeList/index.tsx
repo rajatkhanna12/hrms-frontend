@@ -35,12 +35,12 @@ const EmployeeList: React.FC = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Phone Number
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Department
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              </th> */}
+              {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Role
-              </th>
+              </th> */}
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -58,12 +58,12 @@ const EmployeeList: React.FC = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {employee?.phoneNumber}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {employee?.departmentId                  }
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                </td> */}
+                {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {employee?.roleId}
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>

@@ -6,6 +6,8 @@ import { employeeList } from '../store/empList/employeeListSlice';
 import { createTask } from '../store/createTask/createtaskSlice';
 import { getTask } from '../store/getTask/getTaskSlice';
 import { updateTask } from '../store/updateTask/updateTaskSlice';
+import { saveAttendance } from '../store/saveAttendance/saveAttendanceSlice';
+import { getAttendance } from '../store/getAttendance/getAttendanceSlice';
 
 export const useApiActions = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -27,6 +29,7 @@ export const useApiActions = () => {
     }) => dispatch(addEmployee(params)),
     //@ts-ignore
     employeeList: () => dispatch(employeeList()),
+        //@ts-ignore
     getTask: () => dispatch(getTask()),
     createTask: (params: {
       userId: number;
@@ -37,11 +40,21 @@ export const useApiActions = () => {
         createdDate : string;
         estimatedHours : number ;
         id : number;
+            //@ts-ignore
     }) => dispatch(createTask(params)),
     updateTask : ( params: {
       taskId: number;
       status: number;
-    })=> dispatch(updateTask(params))
- 
+          //@ts-ignore
+    })=> dispatch(updateTask(params)),
+    saveAttendance: (params: {
+  userId: number;
+  punchIn: string;
+  punchOut: string;
+       //@ts-ignore
+}) => dispatch(saveAttendance(params)),
+getAttendance: (params: {
+  userId: number;
+}) => dispatch(getAttendance(params)),
   };
 };

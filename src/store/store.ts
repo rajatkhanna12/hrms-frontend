@@ -12,7 +12,9 @@ import sidebarReducer from "./dashboard/sidebarSlice";
 import employeeListSliceReducer from "./empList/employeeListSlice";
 import createTaskSliceReducer from "./createTask/createtaskSlice";
 import getTaskReducer from "./getTask/getTaskSlice";
-import  updateTaskReducer  from "./updateTask/updateTaskSlice";
+import updateTaskReducer from "./updateTask/updateTaskSlice";
+import saveAttendanceReducer from "./saveAttendance/saveAttendanceSlice";
+import getAttendanceReducer from "./getAttendance/getAttendanceSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -22,7 +24,9 @@ const rootReducer = combineReducers({
   employeeList: employeeListSliceReducer,
   createTask: createTaskSliceReducer,
   getTask: getTaskReducer,
-  updateTask : updateTaskReducer
+  updateTask: updateTaskReducer,
+  saveAttendance: saveAttendanceReducer,
+  getAttendance: getAttendanceReducer,
 });
 
 const persistConfig = {

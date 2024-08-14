@@ -1,28 +1,54 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../store/store";
+import React, { useEffect, useState } from "react";
 import Button from "../../components/Button";
-import {
-  addPunchIn,
-  addPunchOut,
-} from "../../features/attendance/attendanceSlice";
+import { useApiActions } from "../../hooks/useActions";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
+import { toast, ToastContainer } from "react-toastify";
 
 const EmployeeAttendance: React.FC = () => {
-  const [employeeID, setEmployeeID] = useState<string>("");
-  const attendanceData = useSelector(
-    (state: RootState) => state.attendance.attendanceData
-  );
-  const dispatch: AppDispatch = useDispatch();
+  const { saveAttendance , getAttendance } = useApiActions();
+  const { userId } = useTypedSelector((state) => state.auth);
+  const { loading } = useTypedSelector((state) => state.saveAttendance);
 
-  const handlePunchIn = () => {
-    if (employeeID) {
-      dispatch(addPunchIn({ employeeUserID: employeeID }));
+  useEffect(() => {
+    getAttendance({userId})
+  }, []);
+
+  const handlePunchIn = async () => {
+    const currentDateTime = new Date();
+    try {
+      const response = await saveAttendance({
+        userId,
+        punchIn: currentDateTime,
+        punchOut: currentDateTime,
+      });
+      // alert("Punch In Successful: " + JSON.stringify(response));
+      if (response?.isError) {
+        toast.error("Punch In Failed: " + response.message);
+      } else {
+        toast.success("Punch In Successful!");
+      }
+    } catch (error) {
+      console.error("Punch In failed", error);
+      toast.error("An unexpected error occurred.");
     }
   };
 
-  const handlePunchOut = () => {
-    if (employeeID) {
-      dispatch(addPunchOut({ employeeUserID: employeeID }));
+  const handlePunchOut = async () => {
+    const currentDateTime = new Date();
+    try {
+      const response = await saveAttendance({
+        userId,
+        punchIn: currentDateTime,
+        punchOut: currentDateTime,
+      });
+      if (response?.isError) {
+        toast.error("Punch Out Failed: " + response.message);
+      } else {
+        toast.success("Punch Out Successful!");
+      }
+    } catch (error) {
+      console.error("Punch Out failed", error);
+      toast.error("An unexpected error occurred.");
     }
   };
 
@@ -77,7 +103,7 @@ const EmployeeAttendance: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {attendanceData.length > 0 ? (
+            {/* {attendanceData.length > 0 ? (
               attendanceData.map((entry:any) => (
                 <tr key={entry.id} className="hover:bg-gray-100">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
@@ -103,10 +129,11 @@ const EmployeeAttendance: React.FC = () => {
                   No attendance records available
                 </td>
               </tr>
-            )}
+            )} */}
           </tbody>
         </table>
       </div>
+      <ToastContainer />
     </div>
   );
 };
